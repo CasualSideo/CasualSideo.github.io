@@ -83,8 +83,15 @@
     // Countdown Timer
     // Auto-target the next Dec 25 (this year if upcoming, otherwise next year)
     const nowInit = new Date();
-    const year = nowInit.getMonth() === 11 && nowInit.getDate() > 25 ? nowInit.getFullYear() + 1 : nowInit.getFullYear();
-    const targetDate = new Date(`${year}-12-25T00:00:00`).getTime();
+    const currentYear = nowInit.getFullYear();
+    let targetYear = currentYear;
+
+    const thisYearsChristmas = new Date(currentYear, 11, 25, 0, 0, 0);
+    if (nowInit > thisYearsChristmas) {
+      targetYear = currentYear + 1;
+    }
+
+    const targetDate = new Date(targetYear, 11, 25, 0, 0, 0).getTime();
     const countdownEl = document.getElementById("countdown");
 
     setInterval(() => {
