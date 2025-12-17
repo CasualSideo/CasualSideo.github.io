@@ -1,23 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Personal Site</title>
   <meta charset="UTF-8" />
-  <link rel="stylesheet" href="https://unpkg.com/98.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Password Drop</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #dcdcdc;
+      color: #000;
+    }
+
+    .container {
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .title {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .date {
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+
+    .email-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    input {
+      border: none;
+      border-bottom: 1px solid #000;
+      background: transparent;
+      padding: 4px 6px;
+      font-size: 11px;
+      outline: none;
+      width: 140px;
+    }
+
+    button {
+      border: none;
+      background: none;
+      font-size: 11px;
+      cursor: pointer;
+      padding: 4px 6px;
+    }
+
+    button:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
-
 <body>
-       <h1>Jacob McQueen</h1>
-    <hr>
-    <p>Front-End Developer | Professional Idiot | Arizona Ice Tea Enthusiast</p>
+  <div class="container">
+    <div class="title">PROJECT NAME</div>
+    <div class="date" id="countdown">COMING SOON</div>
 
-    <h2 id="intro">About Me</h2>
-    <p>
-Hey, I'm Jacob McQueem</p>
-
-<p> I love sports media, statistics, and working with others.
-    </p>
+    <div class="email-row">
+      <input type="email" placeholder="ENTER EMAIL" />
+      <button>NOTIFY ME</button>
     </div>
   </div>
+
+  <script>
+    // Countdown Timer
+    const targetDate = new Date("2025-12-25T00:00:00").getTime();
+    const countdownEl = document.getElementById("countdown");
+
+    setInterval(() => {
+      const now = new Date().getTime();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        countdownEl.innerText = "LIVE";
+        return;
+      }
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      countdownEl.innerText = `${hours}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+    }, 1000);
+  </script>
 </body>
 </html>
