@@ -3,9 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- EDIT: page title + description -->
-<title>Your Name – Portfolio</title>
-<meta name="description" content="Portfolio of Your Name">
+<title>jmcqueen</title>
+<meta name="description" content="jmcqueen's site">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
@@ -62,7 +61,7 @@ a{color:#2a4fa8}
 dl{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;margin:8px 0;text-align:left}
 dt{font-weight:bold;text-align:right}
 
-/* finder-style window (Projects) */
+
 .finder{display:flex;min-height:230px;padding:0}
 .side{width:128px;background:linear-gradient(#e3e8f0,#cdd5e1);border-right:1px solid #999;padding:8px 0;font-size:12px}
 .side small{display:block;padding:2px 10px;color:#7d8794;font-weight:bold;font-size:10px;text-transform:uppercase}
@@ -74,7 +73,6 @@ dt{font-weight:bold;text-align:right}
 .proj{display:none}.proj.on{display:block}
 .contact input,.contact textarea{width:100%;border:1px solid #999;border-radius:3px;padding:3px 5px;font:inherit;margin:2px 0 6px;box-shadow:inset 0 1px 2px rgba(0,0,0,.2);user-select:text}
 
-/* ---------- dock ---------- */
 #dockwrap{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;z-index:9000;pointer-events:none}
 #dock{pointer-events:auto;display:flex;align-items:flex-end;gap:6px;padding:0 14px 8px;height:76px;position:relative;margin-bottom:0}
 #dock:before{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;border-radius:6px 6px 0 0;
@@ -92,30 +90,27 @@ dt{font-weight:bold;text-align:right}
 </head>
 <body>
 
-<!-- ================= MENU BAR ================= -->
+
 <div id="menubar">
   <svg class="logo" viewBox="0 0 16 16"><circle cx="8" cy="9" r="5.5" fill="#333"/><path d="M8 4 C8 1.5 10 .5 12 .8 C12 3 10.5 4.2 8 4Z" fill="#333"/></svg>
   <b id="appname">Finder</b><span>File</span><span>Edit</span><span>View</span><span>Go</span><span>Window</span><span>Help</span>
   <span class="spacer"></span>
   <span id="clock"></span>
-  <!-- EDIT: your name in the menu bar -->
-  <b>Your Name</b>
+
+  <b>Jacob</b>
 </div>
 
-<!-- ================= WINDOWS =================
-     Each window = <div class="win" id="..." data-app="..." style="left:..;top:..">
-     Edit any text between the tags. Delete a whole window (and its dock icon) to remove it. -->
 
-<!-- ABOUT -->
+
+
 <div class="win" id="about" data-app="About Me" style="left:40px;top:50px;width:350px">
   <div class="titlebar"><div class="lights"><i></i><i></i><i></i></div><h2>About Me</h2></div>
   <div class="body center">
     <!-- EDIT: avatar. Replace with <img class="icon-lg" src="me.jpg" style="border-radius:8px"> to use a photo -->
     <svg class="icon-lg" viewBox="0 0 64 64"><defs><linearGradient id="gA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fb2f0"/><stop offset="1" stop-color="#2e5fb0"/></linearGradient></defs><rect x="4" y="4" width="56" height="56" rx="12" fill="url(#gA)"/><circle cx="32" cy="25" r="10" fill="#fff"/><path d="M13 54c2-12 10-16 19-16s17 4 19 16z" fill="#fff"/></svg>
-    <h1>Your Name</h1>
-    <div class="sub">Designer &amp; Developer</div>
-    <p style="margin-top:12px">Hi! I'm a short bio goes here. Tell visitors who you are, what you do, and what you love working on.</p>
-    <p>Add a second paragraph about your background, skills, or what you're looking for.</p>
+    <h1>Jacob</h1>
+    <div class="sub">Graphic Designer &amp; Frontend Developer</div>
+    <p style="margin-top:12px">Hi, I'm Jacob! I </p>
     <dl>
       <dt>Location</dt><dd>City, Country</dd>
       <dt>Skills</dt><dd>HTML, CSS, JavaScript</dd>
@@ -132,7 +127,7 @@ dt{font-weight:bold;text-align:right}
   <div class="body finder">
     <div class="side" id="projlist">
       <small>Projects</small>
-      <!-- EDIT: sidebar names. Each data-p must match a .proj id below -->
+    
       <div class="row sel" data-p="p1">Project One</div>
       <div class="row" data-p="p2">Project Two</div>
       <div class="row" data-p="p3">Project Three</div>
@@ -171,26 +166,24 @@ dt{font-weight:bold;text-align:right}
     <label>Message:</label><textarea id="msg" rows="4" placeholder="Write your message…"></textarea>
     <div class="center"><a class="btn blue" id="send">Send</a></div>
     <hr style="margin:10px 0;border:0;border-top:1px solid #ccc">
-    <!-- EDIT: social links -->
-    <p class="center"><a href="https://github.com/yourname" target="_blank" rel="noopener">GitHub</a> ·
-      <a href="https://linkedin.com/in/yourname" target="_blank" rel="noopener">LinkedIn</a> ·
-      <a href="https://twitter.com/yourname" target="_blank" rel="noopener">Twitter</a></p>
+  
+    <p class="center"><a href="https://github.com/CasualSideo" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://x.com/casualsideo" target="_blank" rel="noopener">Twitter</a></p>
   </div>
 </div>
 
-<!-- ABOUT THIS SITE -->
+
 <div class="win hidden" id="site" data-app="About This Site" style="left:300px;top:90px;width:300px">
   <div class="titlebar"><div class="lights"><i></i><i></i><i></i></div><h2>About This Site</h2></div>
   <div class="body center">
-    <h1 style="font-size:22px">Portfolio OS</h1>
+    <h1 style="font-size:22px">jmcqueen OS</h1>
     <div class="sub">Version 1.0</div>
     <p>Built with plain HTML, CSS and JavaScript. Inspired by the Mac OS X Lion desktop.</p>
-    <p class="muted">© 2026 Your Name</p>
+    <p class="muted">© 2026 jmcqueen</p>
   </div>
 </div>
 
-<!-- ================= DOCK =================
-     data-open = id of the window to open. -->
+
 <div id="dockwrap"><div id="dock">
   <div class="di" data-open="about"><span class="tip">About Me</span>
     <svg viewBox="0 0 64 64"><defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8cc0ff"/><stop offset="1" stop-color="#2757b0"/></linearGradient></defs><rect x="3" y="3" width="58" height="58" rx="13" fill="url(#g1)" stroke="#1a3a7a"/><circle cx="32" cy="25" r="10" fill="#fff"/><path d="M13 55c2-12 10-16 19-16s17 4 19 16z" fill="#fff"/></svg></div>
@@ -199,7 +192,7 @@ dt{font-weight:bold;text-align:right}
   <div class="di" data-open="contact"><span class="tip">Contact</span>
     <svg viewBox="0 0 64 64"><defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#cfd6df"/></linearGradient></defs><rect x="4" y="12" width="56" height="40" rx="5" fill="url(#g3)" stroke="#7a8696"/><path d="M6 15l26 20 26-20" fill="none" stroke="#7a8696" stroke-width="2.5"/><rect x="40" y="38" width="20" height="14" rx="2" fill="#e3342f"/><text x="50" y="49" font-size="10" font-weight="bold" fill="#fff" text-anchor="middle">1</text></svg></div>
   <div class="sep"></div>
-  <a class="di" href="https://github.com/yourname" target="_blank" rel="noopener"><span class="tip">GitHub</span>
+  <a class="di" href="https://github.com/CasualSideo" target="_blank" rel="noopener"><span class="tip">GitHub</span>
     <svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="13" fill="#2b2b2b" stroke="#000"/><circle cx="32" cy="32" r="16" fill="none" stroke="#fff" stroke-width="3"/><path d="M26 44v-8m12 8v-8m-12 0c0-5 12-5 12 0" fill="none" stroke="#fff" stroke-width="3"/></svg></a>
   <div class="di" data-open="site"><span class="tip">About This Site</span>
     <svg viewBox="0 0 64 64"><defs><linearGradient id="g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4e4e4"/><stop offset="1" stop-color="#8a8a8a"/></linearGradient></defs><rect x="3" y="3" width="58" height="58" rx="13" fill="url(#g5)" stroke="#555"/><circle cx="32" cy="32" r="13" fill="none" stroke="#333" stroke-width="5" stroke-dasharray="6 3.2"/><circle cx="32" cy="32" r="5" fill="#333"/></svg></div>
