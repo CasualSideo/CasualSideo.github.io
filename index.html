@@ -86,6 +86,47 @@ dt{font-weight:bold;text-align:right}
 .di.run:after{content:"";position:absolute;bottom:-7px;left:50%;margin-left:-2px;width:4px;height:4px;border-radius:50%;background:#bdf;box-shadow:0 0 4px #9cf}
 .sep{width:1px;height:46px;background:rgba(255,255,255,.4);align-self:center;margin:0 4px;z-index:1}
 
+.cboard{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));width:min(320px,100%);aspect-ratio:1;margin:0 auto;border:2px solid #555;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.sq{display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;overflow:hidden;font-family:"Segoe UI Symbol","Apple Symbols","DejaVu Sans","Arial Unicode MS",sans-serif;font-size:min(8vw,30px);line-height:1;cursor:pointer;position:relative;user-select:none}
+.sq span{display:block;height:1em;width:1em;line-height:1em;text-align:center}
+.sq.l{background:#f0d9b5}.sq.d{background:#b58863}
+.sq.sel{background:#7fb2f0!important}
+.sq.last{box-shadow:inset 0 0 0 3px rgba(255,220,0,.7)}
+.sq.chk{background:#e66!important}
+.sq.hint:after{content:"";position:absolute;width:30%;height:30%;border-radius:50%;background:rgba(40,90,170,.55)}
+.pw{color:#fff;text-shadow:0 0 2px #000,0 0 2px #000,0 1px 1px #000}
+.pb{color:#111}
+
+.mp{padding:0!important}
+.lcd{margin:10px;padding:8px 10px;border:1px solid #777;border-radius:4px;text-align:center;background:linear-gradient(#e9eed9,#cfd6bb);box-shadow:inset 0 1px 3px rgba(0,0,0,.35)}
+.lcd #ptitle{font-weight:bold;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog{display:flex;align-items:center;gap:6px;font-size:10px;color:#444;margin-top:4px}
+.prog input{flex:1}
+.ctl{display:flex;align-items:center;justify-content:center;gap:10px;padding:0 10px 10px}
+.cb{width:30px;height:30px;border-radius:50%;border:1px solid #666;cursor:pointer;font-size:12px;line-height:1;color:#222;
+ background:linear-gradient(#fff,#d6d6d6 50%,#c4c4c4 51%,#e8e8e8);box-shadow:0 1px 1px rgba(0,0,0,.3)}
+.cb.big{width:38px;height:38px;font-size:15px}
+.cb:active{background:linear-gradient(#9cc4f0,#4c88d1)}
+.ctl input{width:80px}
+#plist{list-style:none;border-top:1px solid #999;background:#fff;max-height:180px;overflow:auto}
+#plist li{padding:4px 12px;cursor:default;display:flex;justify-content:space-between;gap:8px}
+#plist li:nth-child(even){background:#f0f4fa}
+#plist li.on{background:linear-gradient(#6fa0d8,#3f77bd);color:#fff}
+#stage{background:#000;border-bottom:1px solid #555}
+#stage video,#stage img{display:none;width:100%;max-height:220px;object-fit:contain}
+#stage:fullscreen{display:flex!important;align-items:center;justify-content:center;width:100vw;height:100vh}
+#stage:-webkit-full-screen{display:flex!important;align-items:center;justify-content:center;width:100vw;height:100vh}
+#stage:fullscreen video,#stage:fullscreen img{max-height:100vh;height:100%}
+#stage:-webkit-full-screen video,#stage:-webkit-full-screen img{max-height:100vh;height:100%}
+#mini{position:fixed;top:30px;right:10px;width:290px;z-index:8500;display:none;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;
+ background:linear-gradient(rgba(60,64,72,.92),rgba(24,26,32,.92));border:1px solid rgba(255,255,255,.35);box-shadow:0 4px 14px rgba(0,0,0,.55);color:#fff}
+#mimg{width:42px;height:42px;flex:none;border-radius:4px;cursor:pointer;border:1px solid rgba(0,0,0,.6);background:linear-gradient(#8cc0ff,#2757b0) center/cover no-repeat}
+#mini .mt{flex:1;min-width:0;cursor:pointer;display:flex;flex-direction:column;line-height:1.3}
+#mini .mt b,#mini .mt span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#mini .mt span{font-size:10px;color:#bbb}
+#mini .cb{width:24px;height:24px;font-size:10px;flex:none}
+#mini .cb.big{width:28px;height:28px;font-size:12px}
+.ttype{opacity:.6;font-size:10px;text-transform:uppercase}
 @media(max-width:700px){.win{left:8px!important;width:calc(100vw - 16px)}.di{width:40px;height:40px}#dock{gap:3px;padding:0 8px 6px;height:60px}.finder{flex-direction:column}.side{width:auto;display:flex;flex-wrap:wrap;border-right:0;border-bottom:1px solid #999}.side small{display:none}}
 </style>
 </head>
@@ -113,7 +154,7 @@ dt{font-weight:bold;text-align:right}
     <div class="sub">Graphic Designer &amp; Frontend Developer</div>
     <p style="margin-top:12px">Hi, I'm Jacob! </p>
     <dl>
-      <dt>Location</dt><dd>Phoenix, Arizona</dd
+      <dt>Location</dt><dd>Phoenix, Arizona</dd>
       <dt>Status</dt><dd>Available</dd>
     </dl>
     <a class="btn" data-open="projects">See My Work…</a>
@@ -168,6 +209,47 @@ dt{font-weight:bold;text-align:right}
 </div>
 
 
+<div class="win hidden" id="chess" data-app="Chess" style="left:200px;top:70px;width:360px">
+  <div class="titlebar"><div class="lights"><i></i><i></i><i></i></div><h2>Chess</h2></div>
+  <div class="body center">
+    <div id="cstatus" class="sub" style="margin-bottom:6px"></div>
+    <div class="cboard" id="cboard"></div>
+    <a class="btn" id="cnew">New Game</a><a class="btn" id="cundo">Undo</a>
+  </div>
+</div>
+
+<div class="win hidden" id="music" data-app="Media Player" style="left:260px;top:80px;width:360px">
+  <div class="titlebar"><div class="lights"><i></i><i></i><i></i></div><h2>Media Player</h2></div>
+  <div class="body mp">
+    <div id="stage" style="display:none"><video id="pvid" playsinline></video><img id="pimg" alt=""></div>
+    <div class="lcd">
+      <div id="ptitle">Nothing playing</div><div id="partist" class="muted">Drop files here or press Add Files</div>
+      <div class="prog"><span id="ptime">0:00</span><input type="range" id="pseek" min="0" max="100" value="0"><span id="pdur">0:00</span></div>
+    </div>
+    <div class="ctl">
+      <button class="cb" id="pprev" title="Previous">&#9198;&#xFE0E;</button>
+      <button class="cb big" id="pplay" title="Play">&#9654;&#xFE0E;</button>
+      <button class="cb" id="pnext" title="Next">&#9197;&#xFE0E;</button>
+      <input type="range" id="pvol" min="0" max="1" step="0.05" value="0.8" title="Volume">
+      <button class="cb" id="pfs" title="Fullscreen"><svg width="14" height="14" viewBox="0 0 14 14" style="display:block;margin:auto"><path d="M1 5V1h4M9 1h4v4M13 9v4H9M5 13H1V9" fill="none" stroke="#222" stroke-width="1.8"/></svg></button>
+    </div>
+    <div class="center" style="padding-bottom:8px">
+      <a class="btn" id="padd">Add Files&hellip;</a><a class="btn" id="pclear">Remove Added</a>
+      <input type="file" id="pfile" multiple accept="audio/*,video/*,image/*" hidden>
+      <div class="muted" style="margin-top:4px">Files stay on your computer &ndash; nothing is uploaded.</div>
+    </div>
+    <ul id="plist"></ul>
+  </div>
+</div>
+
+<div id="mini">
+  <div id="mimg" title="Open Media Player"></div>
+  <div class="mt" id="mopen" title="Open Media Player"><b id="mtitle"></b><span id="msub"></span></div>
+  <button class="cb" id="mprev" title="Previous">&#9198;&#xFE0E;</button>
+  <button class="cb big" id="mplay" title="Play / Pause">&#9654;&#xFE0E;</button>
+  <button class="cb" id="mnext" title="Next">&#9197;&#xFE0E;</button>
+</div>
+
 <div id="dockwrap"><div id="dock">
   <div class="di" data-open="about"><span class="tip">About Me</span>
     <svg viewBox="0 0 64 64"><defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8cc0ff"/><stop offset="1" stop-color="#2757b0"/></linearGradient></defs><rect x="3" y="3" width="58" height="58" rx="13" fill="url(#g1)" stroke="#1a3a7a"/><circle cx="32" cy="25" r="10" fill="#fff"/><path d="M13 55c2-12 10-16 19-16s17 4 19 16z" fill="#fff"/></svg></div>
@@ -175,6 +257,10 @@ dt{font-weight:bold;text-align:right}
     <svg viewBox="0 0 64 64"><defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a9d0f2"/><stop offset="1" stop-color="#5a96d0"/></linearGradient></defs><path d="M4 14h22l6 6h28v34a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="url(#g2)" stroke="#3d70a8"/><path d="M4 26h56v28a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#cde4f9" stroke="#3d70a8"/></svg></div>
   <div class="di" data-open="contact"><span class="tip">Contact</span>
     <svg viewBox="0 0 64 64"><defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#cfd6df"/></linearGradient></defs><rect x="4" y="12" width="56" height="40" rx="5" fill="url(#g3)" stroke="#7a8696"/><path d="M6 15l26 20 26-20" fill="none" stroke="#7a8696" stroke-width="2.5"/><rect x="40" y="38" width="20" height="14" rx="2" fill="#e3342f"/><text x="50" y="49" font-size="10" font-weight="bold" fill="#fff" text-anchor="middle">1</text></svg></div>
+  <div class="di" data-open="music"><span class="tip">Media Player</span>
+    <svg viewBox="0 0 64 64"><defs><radialGradient id="g6" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#d9ecff"/><stop offset="1" stop-color="#2f6fc9"/></radialGradient></defs><circle cx="32" cy="32" r="29" fill="url(#g6)" stroke="#1d4a8f"/><path d="M26 44V22l16-4v22" fill="none" stroke="#fff" stroke-width="3"/><ellipse cx="22" cy="44" rx="6" ry="4.5" fill="#fff"/><ellipse cx="38" cy="40" rx="6" ry="4.5" fill="#fff"/></svg></div>
+  <div class="di" data-open="chess"><span class="tip">Chess</span>
+    <svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="13" fill="#f0d9b5" stroke="#6b4a2b"/><path d="M3 32h29V3h-16a13 13 0 0 0-13 13zM32 61h16a13 13 0 0 0 13-13V32H32z" fill="#b58863"/><text x="32" y="47" font-size="40" text-anchor="middle" fill="#222">♞</text></svg></div>
   <div class="sep"></div>
   <a class="di" href="https://github.com/CasualSideo" target="_blank" rel="noopener"><span class="tip">GitHub</span>
     <svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="13" fill="#2b2b2b" stroke="#000"/><circle cx="32" cy="32" r="16" fill="none" stroke="#fff" stroke-width="3"/><path d="M26 44v-8m12 8v-8m-12 0c0-5 12-5 12 0" fill="none" stroke="#fff" stroke-width="3"/></svg></a>
@@ -182,6 +268,8 @@ dt{font-weight:bold;text-align:right}
     <svg viewBox="0 0 64 64"><defs><linearGradient id="g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4e4e4"/><stop offset="1" stop-color="#8a8a8a"/></linearGradient></defs><rect x="3" y="3" width="58" height="58" rx="13" fill="url(#g5)" stroke="#555"/><circle cx="32" cy="32" r="13" fill="none" stroke="#333" stroke-width="5" stroke-dasharray="6 3.2"/><circle cx="32" cy="32" r="5" fill="#333"/></svg></div>
 </div></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
 <script>
 /* ===== EDIT: your email for the contact form ===== */
 var EMAIL = "jmcqueencontact@gmail.com";
@@ -200,11 +288,14 @@ function openWin(id){
 }
 function closeWin(w){
   w.classList.add("hidden"); w.classList.remove("max");
+  /* closing the player: audio keeps playing in the background, video stops */
+  if(w.id === "music" && loaded >= 0 && TRACKS[loaded].type === "video") au.pause();
   var v = wins.filter(function(x){ return !x.classList.contains("hidden"); });
   if(v.length) focusWin(v[v.length-1]); else byId("appname").textContent = "Finder";
   syncDock();
 }
 function syncDock(){
+  if(typeof syncMini === "function") syncMini();
   [].forEach.call(document.querySelectorAll(".di[data-open]"), function(d){
     var w = byId(d.dataset.open);
     d.classList.toggle("run", w && !w.classList.contains("hidden"));
@@ -270,6 +361,243 @@ function tick(){
     d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
 }
 tick(); setInterval(tick, 20000);
+
+/* ===== CHESS ===== */
+if (typeof Chess !== "undefined") {
+  var game = new Chess(), sel = null;
+  var SYM = {p:"\u265f\uFE0E", n:"\u265e", b:"\u265d", r:"\u265c", q:"\u265b", k:"\u265a"};
+  var VAL = {p:1, n:3, b:3, r:5, q:9, k:0};
+
+  function material(g){ // positive = good for black (computer)
+    var s = 0;
+    g.board().forEach(function(row){ row.forEach(function(p){
+      if (p) s += (p.color === "b" ? 1 : -1) * VAL[p.type];
+    }); });
+    return s;
+  }
+  function aiMove(){
+    var best = [], bestScore = -1e9;
+    game.moves().forEach(function(m){
+      game.move(m);
+      var score;
+      if (game.in_checkmate()) score = 1000;
+      else if (game.game_over()) score = 0;
+      else {
+        var worst = 1e9;
+        game.moves().forEach(function(r){
+          game.move(r);
+          var v = game.in_checkmate() ? -1000 : material(game);
+          if (v < worst) worst = v;
+          game.undo();
+        });
+        score = worst;
+      }
+      game.undo();
+      if (score > bestScore) { bestScore = score; best = [m]; }
+      else if (score === bestScore) best.push(m);
+    });
+    game.move(best[Math.floor(Math.random() * best.length)]);
+  }
+  function drawChess(){
+    var h = game.history({verbose:true}), last = h[h.length-1], html = "";
+    var targets = sel ? game.moves({square:sel, verbose:true}).map(function(m){ return m.to; }) : [];
+    for (var r = 0; r < 8; r++) for (var f = 0; f < 8; f++) {
+      var sq = "abcdefgh".charAt(f) + (8 - r), p = game.get(sq);
+      var c = "sq " + ((r + f) % 2 ? "d" : "l");
+      if (sq === sel) c += " sel";
+      if (targets.indexOf(sq) > -1) c += " hint";
+      if (last && (sq === last.from || sq === last.to)) c += " last";
+      if (p && p.type === "k" && p.color === game.turn() && game.in_check()) c += " chk";
+      html += '<div class="' + c + '" data-sq="' + sq + '">' +
+        (p ? '<span class="' + (p.color === "w" ? "pw" : "pb") + '">' + SYM[p.type] + '</span>' : "") + '</div>';
+    }
+    byId("cboard").innerHTML = html;
+    var s;
+    if (game.in_checkmate()) s = game.turn() === "w" ? "Checkmate \u2013 Computer wins" : "Checkmate \u2013 You win!";
+    else if (game.game_over()) s = "Draw";
+    else s = game.turn() === "w" ? (game.in_check() ? "Check! Your move" : "Your move (white)") : "Computer thinking\u2026";
+    byId("cstatus").textContent = s;
+  }
+  byId("cboard").addEventListener("click", function(e){
+    var el = e.target.closest(".sq");
+    if (!el || game.turn() !== "w" || game.game_over()) return;
+    var sq = el.dataset.sq, p = game.get(sq);
+    if (sel && game.move({from:sel, to:sq, promotion:"q"})) {
+      sel = null; drawChess();
+      setTimeout(function(){ if (!game.game_over()) aiMove(); drawChess(); }, 300);
+      return;
+    }
+    sel = (p && p.color === "w" && sq !== sel) ? sq : null;
+    drawChess();
+  });
+  byId("cnew").onclick = function(){ game.reset(); sel = null; drawChess(); };
+  byId("cundo").onclick = function(){
+    if (game.turn() !== "w" && !game.game_over()) return;
+    game.undo(); if (game.turn() !== "w") game.undo();
+    sel = null; drawChess();
+  };
+  drawChess();
+}
+
+/* ===== MEDIA PLAYER ===== */
+/* Starts empty: only files the visitor adds will appear. */
+var TRACKS = [];
+var au = byId("pvid"), pimg = byId("pimg"), ti = 0, loaded = -1;
+au.volume = 0.8;
+function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+function fmt(t){ if(!isFinite(t)) return "0:00"; var m = Math.floor(t/60), s = Math.floor(t%60); return m + ":" + (s<10?"0":"") + s; }
+function subline(t){ return [t.artist, t.album].filter(Boolean).join(" \u2014 ") || (t.local ? "Local file" : ""); }
+function showArt(t){ pimg.src = t.art; pimg.style.display = "block"; byId("stage").style.display = "block"; }
+function readTags(t, f){
+  if(typeof jsmediatags === "undefined" || t.type !== "audio") return;
+  jsmediatags.read(f, {
+    onSuccess: function(r){
+      var g = r.tags || {}, p = g.picture;
+      if(g.title) t.title = g.title;
+      if(g.artist) t.artist = g.artist;
+      if(g.album) t.album = g.album;
+      if(p && p.data) t.art = URL.createObjectURL(new Blob([new Uint8Array(p.data)], {type:p.format || "image/jpeg"}));
+      drawList(); syncMini();
+      if(loaded >= 0 && TRACKS[loaded] === t){
+        byId("ptitle").textContent = t.title; byId("partist").textContent = subline(t);
+        if(t.art) showArt(t);
+      }
+    },
+    onError: function(){}
+  });
+}
+function syncMini(){
+  var m = byId("mini"), t = (typeof loaded !== "undefined" && loaded >= 0) ? TRACKS[loaded] : null;
+  var show = t && t.type === "audio" && byId("music").classList.contains("hidden");
+  m.style.display = show ? "flex" : "none";
+  if(!show) return;
+  byId("mtitle").textContent = t.title;
+  byId("msub").textContent = subline(t) || "\u00a0";
+  byId("mimg").style.backgroundImage = t.art ? 'url("' + t.art + '")' : "none";
+  byId("mplay").innerHTML = au.paused ? "&#9654;&#xFE0E;" : "&#10074;&#10074;";
+}
+function drawList(){
+  byId("plist").innerHTML = TRACKS.map(function(t,i){
+    return '<li data-i="' + i + '" class="' + (i===ti && loaded>=0 ? "on" : "") + '"><span>' + esc(t.title) +
+           '</span><span class="ttype">' + (t.type==="image"?"photo":t.type) + '</span></li>';
+  }).join("");
+}
+function resetStage(){
+  au.pause(); au.removeAttribute("src"); au.load();
+  pimg.removeAttribute("src"); pimg.style.display = "none"; au.style.display = "none";
+  byId("stage").style.display = "none";
+}
+function loadTrack(i, play){
+  if(!TRACKS.length) return;
+  ti = (i + TRACKS.length) % TRACKS.length; loaded = ti;
+  var t = TRACKS[ti];
+  resetStage();
+  byId("ptitle").textContent = t.title;
+  byId("partist").textContent = subline(t);
+  byId("pseek").value = 0; byId("ptime").textContent = "0:00"; byId("pdur").textContent = "0:00";
+  if(t.type === "image"){
+    pimg.src = t.src; pimg.style.display = "block"; byId("stage").style.display = "block";
+  } else {
+    au.src = t.src;
+    if(t.type === "audio" && t.art) showArt(t);
+    if(t.type === "video"){ au.style.display = "block"; byId("stage").style.display = "block"; }
+    if(play) au.play().catch(function(){});
+  }
+  drawList(); syncMini();
+}
+function isImg(){ return loaded >= 0 && TRACKS[loaded].type === "image"; }
+byId("pplay").onclick = function(){
+  if(!TRACKS.length){ byId("pfile").click(); return; }
+  if(loaded < 0 || isImg()) loadTrack(loaded < 0 ? 0 : ti, true);
+  else if(au.paused) au.play().catch(function(){}); else au.pause();
+};
+byId("pnext").onclick = function(){ loadTrack(ti+1, loaded < 0 || isImg() || !au.paused); };
+byId("pprev").onclick = function(){
+  if(!isImg() && au.currentTime > 3) au.currentTime = 0;
+  else loadTrack(ti-1, loaded < 0 || isImg() || !au.paused);
+};
+byId("plist").addEventListener("click", function(e){
+  var li = e.target.closest("li"); if(li) loadTrack(+li.dataset.i, true);
+});
+byId("pvol").oninput = function(){ au.volume = this.value; };
+byId("pseek").oninput = function(){ if(au.duration) au.currentTime = this.value/100*au.duration; };
+au.addEventListener("play",  function(){ byId("pplay").innerHTML = "&#10074;&#10074;"; syncMini(); });
+au.addEventListener("pause", function(){ byId("pplay").innerHTML = "&#9654;&#xFE0E;"; syncMini(); });
+au.addEventListener("timeupdate", function(){
+  byId("ptime").textContent = fmt(au.currentTime);
+  if(au.duration) byId("pseek").value = au.currentTime/au.duration*100;
+});
+au.addEventListener("loadedmetadata", function(){ byId("pdur").textContent = fmt(au.duration); });
+au.addEventListener("ended", function(){ loadTrack(ti+1, true); });
+au.addEventListener("error", function(){
+  if(au.getAttribute("src")) byId("partist").textContent = "Can't play this file in your browser";
+});
+pimg.addEventListener("error", function(){
+  if(pimg.getAttribute("src")) byId("partist").textContent = "Can't display this image";
+});
+
+/* ---- fullscreen (video and photos) ---- */
+function toggleFS(){
+  var st = byId("stage");
+  if(st.style.display === "none"){ byId("partist").textContent = "Fullscreen works for video and photos"; return; }
+  if(document.fullscreenElement || document.webkitFullscreenElement){
+    (document.exitFullscreen || document.webkitExitFullscreen).call(document); return;
+  }
+  var rq = st.requestFullscreen || st.webkitRequestFullscreen;
+  if(rq) rq.call(st);
+  else if(au.webkitEnterFullscreen && loaded >= 0 && TRACKS[loaded].type === "video") au.webkitEnterFullscreen();
+}
+byId("pfs").onclick = toggleFS;
+byId("stage").addEventListener("dblclick", toggleFS);
+byId("stage").addEventListener("click", function(){
+  if((document.fullscreenElement || document.webkitFullscreenElement) && loaded >= 0 && TRACKS[loaded].type === "video"){
+    if(au.paused) au.play().catch(function(){}); else au.pause();
+  }
+});
+
+/* ---- user files (stay on the visitor's computer) ---- */
+function kind(f){
+  if(/^audio\//.test(f.type) || /\.(mp3|m4a|wav|ogg|oga|flac|aac|opus)$/i.test(f.name)) return "audio";
+  if(/^video\//.test(f.type) || /\.(mp4|m4v|webm|mov|ogv)$/i.test(f.name)) return "video";
+  if(/^image\//.test(f.type) || /\.(jpe?g|png|gif|webp|avif|svg|bmp)$/i.test(f.name)) return "image";
+  return null;
+}
+function addFiles(list){
+  var first = -1, skipped = 0;
+  [].forEach.call(list, function(f){
+    var k = kind(f);
+    if(!k){ skipped++; return; }
+    if(first < 0) first = TRACKS.length;
+    var item = {title:f.name.replace(/\.[^.]+$/, ""), artist:"", src:URL.createObjectURL(f), type:k, local:true};
+    TRACKS.push(item); readTags(item, f);
+  });
+  drawList();
+  if(first >= 0){ openWin("music"); loadTrack(first, true); }
+  if(skipped) byId("partist").textContent = skipped + " file(s) skipped: not audio, video or photo";
+}
+byId("padd").onclick = function(){ byId("pfile").click(); };
+byId("pfile").onchange = function(){ addFiles(this.files); this.value = ""; };
+byId("pclear").onclick = function(){
+  var cur = loaded >= 0 ? TRACKS[loaded] : null;
+  TRACKS = TRACKS.filter(function(t){ if(t.local){ URL.revokeObjectURL(t.src); if(t.art) URL.revokeObjectURL(t.art); } return !t.local; });
+  if(cur && cur.local){
+    resetStage(); loaded = -1; ti = 0;
+    byId("ptitle").textContent = "Nothing playing"; byId("partist").textContent = "\u00a0";
+  } else if(cur){ ti = loaded = TRACKS.indexOf(cur); }
+  drawList(); syncMini();
+};
+/* mini player buttons */
+byId("mprev").onclick = function(){ byId("pprev").onclick(); };
+byId("mplay").onclick = function(){ byId("pplay").onclick(); };
+byId("mnext").onclick = function(){ byId("pnext").onclick(); };
+byId("mimg").onclick = byId("mopen").onclick = function(){ openWin("music"); };
+/* drop files anywhere on the page */
+document.addEventListener("dragover", function(e){ e.preventDefault(); });
+document.addEventListener("drop", function(e){
+  e.preventDefault();
+  if(e.dataTransfer && e.dataTransfer.files.length) addFiles(e.dataTransfer.files);
+});
+drawList();
 
 /* start: show About + Projects + Contact (change order/list to taste) */
 ["contact","projects","about"].forEach(openWin);
