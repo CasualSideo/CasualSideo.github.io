@@ -127,10 +127,11 @@ dt{font-weight:bold;text-align:right}
 #mini .cb{width:24px;height:24px;font-size:10px;flex:none}
 #mini .cb.big{width:28px;height:28px;font-size:12px}
 .ttype{opacity:.6;font-size:10px;text-transform:uppercase}
+.booting .win{visibility:hidden}
 @media(max-width:700px){.win{left:8px!important;width:calc(100vw - 16px)}.di{width:40px;height:40px}#dock{gap:3px;padding:0 8px 6px;height:60px}.finder{flex-direction:column}.side{width:auto;display:flex;flex-wrap:wrap;border-right:0;border-bottom:1px solid #999}.side small{display:none}}
 </style>
 </head>
-<body>
+<body class="booting">
 
 
 <div id="menubar">
@@ -236,7 +237,7 @@ dt{font-weight:bold;text-align:right}
     <div class="center" style="padding-bottom:8px">
       <a class="btn" id="padd">Add Files&hellip;</a><a class="btn" id="pclear">Remove Added</a>
       <input type="file" id="pfile" multiple accept="audio/*,video/*,image/*" hidden>
-      <div class="muted" style="margin-top:4px">Files stay on your computer &ndash; nothing is uploaded.</div>
+      <div class="muted" style="margin-top:4px">Files stay on your computer &ndash; nothing is uploaded. They&rsquo;re remembered in this browser until you press Remove Added.</div>
     </div>
     <ul id="plist"></ul>
   </div>
@@ -281,18 +282,22 @@ function focusWin(w){
   w.style.zIndex = ++z;
   wins.forEach(function(x){ x.classList.toggle("active", x === w); });
   byId("appname").textContent = w.dataset.app;
+  saveLayout();
 }
 function openWin(id){
   var w = byId(id); if(!w) return;
   w.classList.remove("hidden"); focusWin(w); syncDock();
 }
-function closeWin(w){
+function closeWin(w, quit){
   w.classList.add("hidden"); w.classList.remove("max");
-  /* closing the player: audio keeps playing in the background, video stops */
-  if(w.id === "music" && loaded >= 0 && TRACKS[loaded].type === "video") au.pause();
+  /* Media Player: red button = quit (stop everything); yellow = minimize (audio keeps playing + mini player, video pauses) */
+  if(w.id === "music"){
+    if(quit) stopPlayer();
+    else if(loaded >= 0 && TRACKS[loaded].type === "video") au.pause();
+  }
   var v = wins.filter(function(x){ return !x.classList.contains("hidden"); });
   if(v.length) focusWin(v[v.length-1]); else byId("appname").textContent = "Finder";
-  syncDock();
+  syncDock(); saveLayout();
 }
 function syncDock(){
   if(typeof syncMini === "function") syncMini();
@@ -305,8 +310,9 @@ function syncDock(){
 wins.forEach(function(w){
   var bar = w.querySelector(".titlebar"), btns = w.querySelectorAll(".lights i");
   w.addEventListener("mousedown", function(){ focusWin(w); });
-  btns[0].onclick = btns[1].onclick = function(){ closeWin(w); };
-  btns[2].onclick = function(){ w.classList.toggle("max"); };
+  btns[0].onclick = function(){ closeWin(w, true); };
+  btns[1].onclick = function(){ closeWin(w, false); };
+  btns[2].onclick = function(){ w.classList.toggle("max"); saveLayout(); };
   bar.addEventListener("pointerdown", function(e){
     if(e.target.tagName === "I" || w.classList.contains("max")) return;
     var ox = e.clientX - w.offsetLeft, oy = e.clientY - w.offsetTop;
@@ -315,7 +321,7 @@ wins.forEach(function(w){
       w.style.left = Math.max(-w.offsetWidth+80, Math.min(innerWidth-80, ev.clientX-ox)) + "px";
       w.style.top  = Math.max(22, Math.min(innerHeight-60, ev.clientY-oy)) + "px";
     }
-    function up(){ bar.removeEventListener("pointermove", mv); bar.removeEventListener("pointerup", up); }
+    function up(){ bar.removeEventListener("pointermove", mv); bar.removeEventListener("pointerup", up); saveLayout(); }
     bar.addEventListener("pointermove", mv); bar.addEventListener("pointerup", up);
   });
 });
@@ -330,6 +336,7 @@ byId("projlist").addEventListener("click", function(e){
   var r = e.target.closest(".row"); if(!r) return;
   [].forEach.call(document.querySelectorAll("#projlist .row"), function(x){ x.classList.toggle("sel", x === r); });
   [].forEach.call(document.querySelectorAll(".proj"), function(x){ x.classList.toggle("on", x.id === r.dataset.p); });
+  saveLayout();
 });
 
 /* contact form -> mailto */
@@ -476,6 +483,13 @@ function syncMini(){
   byId("mimg").style.backgroundImage = t.art ? 'url("' + t.art + '")' : "none";
   byId("mplay").innerHTML = au.paused ? "&#9654;&#xFE0E;" : "&#10074;&#10074;";
 }
+function stopPlayer(){
+  resetStage(); loaded = -1; ti = 0;
+  byId("ptitle").textContent = "Nothing playing";
+  byId("partist").textContent = "Drop files here or press Add Files";
+  byId("pseek").value = 0; byId("ptime").textContent = "0:00"; byId("pdur").textContent = "0:00";
+  drawList(); syncMini();
+}
 function drawList(){
   byId("plist").innerHTML = TRACKS.map(function(t,i){
     return '<li data-i="' + i + '" class="' + (i===ti && loaded>=0 ? "on" : "") + '"><span>' + esc(t.title) +
@@ -555,6 +569,50 @@ byId("stage").addEventListener("click", function(){
   }
 });
 
+/* ---- remember added files in this browser (IndexedDB; never uploaded) ---- */
+var db = null;
+function dbOpen(cb){
+  var done = false;
+  function fin(){ if(!done){ done = true; if(cb) cb(); } }
+  try{
+    var rq = indexedDB.open("lionMedia", 2);
+    rq.onupgradeneeded = function(){
+      var d = rq.result;
+      if(!d.objectStoreNames.contains("files")) d.createObjectStore("files", {keyPath:"id", autoIncrement:true});
+      if(!d.objectStoreNames.contains("layout")) d.createObjectStore("layout");
+    };
+    rq.onsuccess = function(){ db = rq.result; fin(); };
+    rq.onerror = rq.onblocked = fin;
+    setTimeout(fin, 2000);
+  }catch(e){ fin(); }
+}
+function dbSave(f, item){
+  if(!db) return;
+  try{
+    var rq = db.transaction("files", "readwrite").objectStore("files").add({file:f, kind:item.type});
+    rq.onsuccess = function(){ item.id = rq.result; };
+  }catch(e){}
+}
+function dbClear(){
+  if(!db) return;
+  try{ db.transaction("files", "readwrite").objectStore("files").clear(); }catch(e){}
+}
+function dbLoad(){
+  if(!db) return;
+  try{
+    var rq = db.transaction("files").objectStore("files").getAll();
+    rq.onsuccess = function(){
+      rq.result.forEach(function(r){
+        var f = r.file;
+        var item = {id:r.id, title:(f.name || "File").replace(/\.[^.]+$/, ""), artist:"", src:URL.createObjectURL(f), type:r.kind, local:true};
+        TRACKS.push(item); readTags(item, f);
+      });
+      drawList();
+    };
+  }catch(e){}
+  if(navigator.storage && navigator.storage.persist) navigator.storage.persist();
+}
+
 /* ---- user files (stay on the visitor's computer) ---- */
 function kind(f){
   if(/^audio\//.test(f.type) || /\.(mp3|m4a|wav|ogg|oga|flac|aac|opus)$/i.test(f.name)) return "audio";
@@ -569,7 +627,7 @@ function addFiles(list){
     if(!k){ skipped++; return; }
     if(first < 0) first = TRACKS.length;
     var item = {title:f.name.replace(/\.[^.]+$/, ""), artist:"", src:URL.createObjectURL(f), type:k, local:true};
-    TRACKS.push(item); readTags(item, f);
+    TRACKS.push(item); readTags(item, f); dbSave(f, item);
   });
   drawList();
   if(first >= 0){ openWin("music"); loadTrack(first, true); }
@@ -579,6 +637,7 @@ byId("padd").onclick = function(){ byId("pfile").click(); };
 byId("pfile").onchange = function(){ addFiles(this.files); this.value = ""; };
 byId("pclear").onclick = function(){
   var cur = loaded >= 0 ? TRACKS[loaded] : null;
+  dbClear();
   TRACKS = TRACKS.filter(function(t){ if(t.local){ URL.revokeObjectURL(t.src); if(t.art) URL.revokeObjectURL(t.art); } return !t.local; });
   if(cur && cur.local){
     resetStage(); loaded = -1; ti = 0;
@@ -599,8 +658,58 @@ document.addEventListener("drop", function(e){
 });
 drawList();
 
-/* start: show About + Projects + Contact (change order/list to taste) */
-["contact","projects","about"].forEach(openWin);
+/* ---- remember window layout (position, open/closed, maximized, stacking, project tab) ---- */
+var restoring = true, saveT;
+function saveLayout(){
+  if(restoring || !db) return;
+  clearTimeout(saveT);
+  saveT = setTimeout(function(){
+    var o = {}, r = document.querySelector("#projlist .row.sel");
+    wins.forEach(function(w){
+      o[w.id] = {left:w.style.left, top:w.style.top, hidden:w.classList.contains("hidden"),
+                 max:w.classList.contains("max"), z:parseInt(w.style.zIndex, 10) || 0};
+    });
+    try{ db.transaction("layout", "readwrite").objectStore("layout").put({wins:o, proj:r ? r.dataset.p : null}, "main"); }catch(e){}
+  }, 250);
+}
+function restoreLayout(cb){
+  if(!db){ cb(false); return; }
+  try{
+    var rq = db.transaction("layout").objectStore("layout").get("main");
+    rq.onerror = function(){ cb(false); };
+    rq.onsuccess = function(){
+      var d = rq.result;
+      if(!d || !d.wins){ cb(false); return; }
+      wins.forEach(function(w){
+        var st = d.wins[w.id]; if(!st) return;
+        if(st.left){ w.style.left = Math.max(-w.offsetWidth + 80, Math.min(innerWidth - 80, parseInt(st.left, 10))) + "px"; }
+        if(st.top){ w.style.top = Math.max(22, Math.min(innerHeight - 60, parseInt(st.top, 10))) + "px"; }
+        w.classList.toggle("hidden", !!st.hidden);
+        w.classList.toggle("max", !!st.max);
+      });
+      z = 10;
+      var order = wins.filter(function(w){ return d.wins[w.id]; })
+                      .sort(function(a, b){ return d.wins[a.id].z - d.wins[b.id].z; });
+      order.forEach(function(w){ w.style.zIndex = ++z; });
+      var vis = order.filter(function(w){ return !w.classList.contains("hidden"); }), top = vis[vis.length - 1];
+      wins.forEach(function(w){ w.classList.toggle("active", w === top); });
+      byId("appname").textContent = top ? top.dataset.app : "Finder";
+      if(d.proj){ var row = document.querySelector('#projlist .row[data-p="' + d.proj + '"]'); if(row) row.click(); }
+      syncDock(); cb(true);
+    };
+  }catch(e){ cb(false); }
+}
+
+/* start: restore the saved layout, or open About + Projects + Contact the first time (edit the list to taste) */
+dbOpen(function(){
+  dbLoad();
+  restoreLayout(function(ok){
+    if(!ok) ["contact","projects","about"].forEach(openWin);
+    restoring = false;
+    document.body.classList.remove("booting");
+    saveLayout();
+  });
+});
 </script>
 </body>
 </html>
