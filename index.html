@@ -148,7 +148,7 @@ dt{font-weight:bold;text-align:right}
     <label>To:</label><input id="to" value="jmcqueencontact@gmail.com" readonly>
     <label>Subject:</label><input id="subj" value="Hello!">
     <label>Message:</label><textarea id="msg" rows="4" placeholder="Write your message…"></textarea>
-    <div class="center"><a class="btn blue" id="send">Send</a></div>
+    <div class="center"><a class="btn blue" id="send">Send</a> <a class="btn" id="gmail">Open in Gmail</a></div>
     <hr style="margin:10px 0;border:0;border-top:1px solid #ccc">
   
     <p class="center"><a href="https://github.com/CasualSideo" target="_blank" rel="noopener">GitHub</a>
@@ -247,6 +247,12 @@ byId("send").onclick = function(){
                   "&body=" + encodeURIComponent(byId("msg").value);
 };
 
+/* open in Gmail */
+byId("gmail").onclick = function(){
+  window.open("https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(EMAIL) +
+    "&su=" + encodeURIComponent(byId("subj").value) +
+    "&body=" + encodeURIComponent(byId("msg").value), "_blank");
+};
 /* dock magnification */
 var dock = byId("dock"), items = [].slice.call(dock.querySelectorAll(".di"));
 dock.addEventListener("mousemove", function(e){
