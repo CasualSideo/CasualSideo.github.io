@@ -295,7 +295,7 @@ dt{font-weight:bold;text-align:right}
 <div class="win hidden" id="sol" data-app="Solitaire" style="left:260px;top:50px;width:404px">
   <div class="titlebar"><div class="lights"><i></i><i></i><i></i></div><h2>Solitaire</h2></div>
   <div class="body mp">
-    <div class="sol" id="sol"></div>
+    <div class="sol" id="solb"></div>
     <div class="center" style="padding:4px"><span class="sub" id="msol">Click a card, then where it goes &middot; double-click sends it up</span> <a class="btn" id="nsol">New Game</a></div>
   </div>
 </div>
@@ -880,10 +880,10 @@ function drawSol(){
     if(sel && sel[0]==="t" && +sel.slice(1).split(":")[0]===c) si=+sel.split(":")[1];
     col.forEach(function(card,j){ h+=cardHtml(card,"t"+c+":"+j,X(c),y,si>=0&&j>=si); y+=card.up?22:10; });
   }
-  byId("sol").innerHTML=h;
+  byId("solb").innerHTML=h;
   if(fnd[0].length+fnd[1].length+fnd[2].length+fnd[3].length===52) byId("msol").textContent="You win!";
 }
-byId("sol").addEventListener("click", function(e){
+byId("solb").addEventListener("click", function(e){
   var el=e.target.closest("[data-k]"); if(!el) return; var k=el.dataset.k;
   if(k==="s"){
     if(stk.length){ var c=stk.pop(); c.up=1; wst.push(c); }
@@ -894,7 +894,7 @@ byId("sol").addEventListener("click", function(e){
   var cs=pickS(k);
   sel = (cs.length && cs[0].up && sel!==k) ? k : null; drawSol();
 });
-byId("sol").addEventListener("dblclick", function(e){
+byId("solb").addEventListener("dblclick", function(e){
   var el=e.target.closest("[data-k]"); if(!el) return; var k=el.dataset.k, cs=pickS(k);
   if(cs.length!==1||!cs[0].up) return;
   for(var i=0;i<4;i++) if(canFnd(cs[0],i)){ takeS(k); fnd[i].push(cs[0]); sel=null; drawSol(); return; }
