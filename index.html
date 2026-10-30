@@ -165,7 +165,7 @@ dt{font-weight:bold;text-align:right}
 <div class="win" id="about" data-app="About Me" style="left:40px;top:50px;width:350px">
   <div class="titlebar"><div class="lights"><i></i><i></i><i></i></div><h2>About Me</h2></div>
   <div class="body center">
-    <!-- EDIT: avatar. Replace with <img class="icon-lg" src="me.jpg" style="border-radius:8px"> to use a photo -->
+   
   <img class="icon-lg" src="me.jpg" alt="Jacob" style="border-radius:8px;object-fit:cover">
     <h1>Jacob</h1>
     <div class="sub">Graphic Designer &amp; Frontend Developer</div>
@@ -321,7 +321,7 @@ dt{font-weight:bold;text-align:right}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
 <script>
-/* ===== EDIT: your email for the contact form ===== */
+
 var EMAIL = "jmcqueencontact@gmail.com";
 
 var wins = [].slice.call(document.querySelectorAll(".win")), z = 10;
@@ -339,7 +339,7 @@ function openWin(id){
 }
 function closeWin(w, quit){
   w.classList.add("hidden"); w.classList.remove("max");
-  /* Media Player: red button = quit (stop everything); yellow = minimize (audio keeps playing + mini player, video pauses) */
+
   if(w.id === "music"){
     if(quit) stopPlayer();
     else if(loaded >= 0 && TRACKS[loaded].type === "video") au.pause();
@@ -380,7 +380,7 @@ document.addEventListener("click", function(e){
   if(t) openWin(t.dataset.open);
 });
 
-/* project switcher */
+
 byId("projlist").addEventListener("click", function(e){
   var r = e.target.closest(".row"); if(!r) return;
   [].forEach.call(document.querySelectorAll("#projlist .row"), function(x){ x.classList.toggle("sel", x === r); });
@@ -388,19 +388,18 @@ byId("projlist").addEventListener("click", function(e){
   saveLayout();
 });
 
-/* contact form -> mailto */
+
 byId("send").onclick = function(){
   location.href = "mailto:" + EMAIL + "?subject=" + encodeURIComponent(byId("subj").value) +
                   "&body=" + encodeURIComponent(byId("msg").value);
 };
 
-/* open in Gmail */
 byId("gmail").onclick = function(){
   window.open("https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(EMAIL) +
     "&su=" + encodeURIComponent(byId("subj").value) +
     "&body=" + encodeURIComponent(byId("msg").value), "_blank");
 };
-/* dock magnification */
+
 var dock = byId("dock"), items = [].slice.call(dock.querySelectorAll(".di"));
 dock.addEventListener("mousemove", function(e){
   items.forEach(function(it){
@@ -495,8 +494,7 @@ if (typeof Chess !== "undefined") {
   drawChess();
 }
 
-/* ===== MEDIA PLAYER ===== */
-/* Starts empty: only files the visitor adds will appear. */
+
 var TRACKS = [];
 var au = byId("pvid"), pimg = byId("pimg"), ti = 0, loaded = -1;
 au.volume = 0.8;
@@ -618,7 +616,7 @@ pimg.addEventListener("error", function(){
   if(pimg.getAttribute("src")) byId("partist").textContent = "Can't display this image";
 });
 
-/* ---- fullscreen (video and photos) ---- */
+
 function toggleFS(){
   var st = byId("stage");
   if(st.style.display === "none"){ byId("partist").textContent = "Fullscreen works for video and photos"; return; }
@@ -637,7 +635,7 @@ byId("stage").addEventListener("click", function(){
   }
 });
 
-/* ---- remember added files in this browser (IndexedDB; never uploaded) ---- */
+
 var db = null;
 function dbOpen(cb){
   var done = false;
@@ -681,7 +679,7 @@ function dbLoad(){
   if(navigator.storage && navigator.storage.persist) navigator.storage.persist();
 }
 
-/* ---- user files (stay on the visitor's computer) ---- */
+
 function kind(f){
   if(/^audio\//.test(f.type) || /\.(mp3|m4a|wav|ogg|oga|flac|aac|opus)$/i.test(f.name)) return "audio";
   if(/^video\//.test(f.type) || /\.(mp4|m4v|webm|mov|ogv)$/i.test(f.name)) return "video";
@@ -713,12 +711,12 @@ byId("pclear").onclick = function(){
   } else if(cur){ ti = loaded = TRACKS.indexOf(cur); }
   drawList(); syncMini();
 };
-/* mini player buttons */
+
 byId("mprev").onclick = function(){ byId("pprev").onclick(); };
 byId("mplay").onclick = function(){ byId("pplay").onclick(); };
 byId("mnext").onclick = function(){ byId("pnext").onclick(); };
 byId("mimg").onclick = byId("mopen").onclick = function(){ openWin("music"); };
-/* drop files anywhere on the page */
+
 document.addEventListener("dragover", function(e){ e.preventDefault(); });
 document.addEventListener("drop", function(e){
   e.preventDefault();
@@ -727,7 +725,7 @@ document.addEventListener("drop", function(e){
 drawList();
 
 /* ===== GAMES ===== */
-/* --- 2048 --- */
+
 var G48=[],s48=0,b48=0,o48=false;
 try{ b48 = +localStorage.getItem("b48") || 0; }catch(e){}
 var C48={0:"#cdc1b4",2:"#eee4da",4:"#ede0c8",8:"#f2b179",16:"#f59563",32:"#f67c5f",64:"#f65e3b",128:"#edcf72",256:"#edcc61",512:"#edc850",1024:"#edc53f",2048:"#edc22e"};
@@ -943,7 +941,6 @@ function restoreLayout(cb){
   }catch(e){ cb(false); }
 }
 
-/* start: restore the saved layout, or open About + Projects + Contact the first time (edit the list to taste) */
 dbOpen(function(){
   dbLoad();
   restoreLayout(function(ok){
