@@ -131,8 +131,16 @@ dt{font-weight:bold;text-align:right}
 .ttype{opacity:.6;font-size:10px;text-transform:uppercase}
 .booting .win{visibility:hidden}
 .gi{display:inline-block;width:84px;margin:6px;text-align:center;cursor:pointer}.gi svg{width:52px;height:52px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}.gi span{display:block;font-size:12px;margin-top:2px}
-.g48{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:#bbada0;padding:6px;border-radius:6px;width:min(300px,100%);aspect-ratio:1;margin:6px auto;touch-action:none}
-.t48{display:flex;align-items:center;justify-content:center;border-radius:4px;font-weight:bold;font-size:22px}
+.g48{position:relative;background:#bbada0;border-radius:6px;width:min(300px,100%);aspect-ratio:1;margin:6px auto;touch-action:none}
+.c48,.k48{position:absolute;width:25%;height:25%}
+.c48 i{position:absolute;inset:3px;border-radius:4px;background:#cdc1b4}
+#t48l{position:absolute;inset:0}
+.k48{transition:left .12s ease,top .12s ease;z-index:2}
+.t48{position:absolute;inset:3px;display:flex;align-items:center;justify-content:center;border-radius:4px;font-weight:bold;font-size:22px}
+.k48.new .t48{animation:pop48 .2s .1s backwards}
+.k48.mrg .t48{animation:mrg48 .2s}
+@keyframes pop48{from{transform:scale(0)}to{transform:scale(1)}}
+@keyframes mrg48{50%{transform:scale(1.2)}}
 .mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .lcdn{font:bold 18px monospace;background:#200;color:#f33;padding:1px 6px;min-width:46px;display:inline-block}
 .mboard{display:grid;grid-template-columns:repeat(9,28px);border:3px solid #888;width:max-content;margin:0 auto}
@@ -364,9 +372,41 @@ function focusWin(w){
   byId("appname").textContent = w.dataset.app;
   saveLayout();
 }
+/* window animations: open grows out of the dock icon, yellow button squashes into it */
+function dockTarget(id){
+  var d = document.querySelector('.di[data-open="' + id + '"]') || document.querySelector('.di[data-open="games"]');
+  return d ? d.getBoundingClientRect() : null;
+}
+function dockDelta(w, id){
+  var r = w.getBoundingClientRect(), t = dockTarget(id);
+  if(!t) return {dx:0, dy:r.height/2};
+  return {dx:t.left + t.width/2 - (r.left + r.width/2), dy:t.top + t.height/2 - (r.top + r.height/2)};
+}
+function noMotion(w){ return !w.animate || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches); }
+function animOpen(w){
+  if(noMotion(w)) return;
+  var o = dockDelta(w, w.id);
+  w.animate([
+    {transform:"translate(" + o.dx + "px," + o.dy + "px) scale(.08,.04)", opacity:0, offset:0},
+    {transform:"translate(" + o.dx*.35 + "px," + o.dy*.35 + "px) scale(.6,.35)", opacity:.8, offset:.4},
+    {transform:"none", opacity:1, offset:1}
+  ], {duration:340, easing:"cubic-bezier(.2,.8,.3,1)"});
+}
+function minimizeWin(w){
+  if(noMotion(w) || w._min){ closeWin(w, false); return; }
+  var o = dockDelta(w, w.id); w._min = true;
+  var a = w.animate([
+    {transform:"none", opacity:1, offset:0},
+    {transform:"translate(" + o.dx*.5 + "px," + o.dy*.5 + "px) scale(.6,.3)", opacity:.8, offset:.6},
+    {transform:"translate(" + o.dx + "px," + o.dy + "px) scale(.08,.04)", opacity:0, offset:1}
+  ], {duration:380, easing:"ease-in", fill:"forwards"});
+  a.onfinish = a.oncancel = function(){ a.onfinish = a.oncancel = null; closeWin(w, false); a.cancel(); w._min = false; };
+}
 function openWin(id){
   var w = byId(id); if(!w) return;
+  var was = w.classList.contains("hidden");
   w.classList.remove("hidden"); focusWin(w); syncDock();
+  if(was) animOpen(w);
 }
 function closeWin(w, quit){
   w.classList.add("hidden"); w.classList.remove("max");
@@ -391,7 +431,7 @@ wins.forEach(function(w){
   var bar = w.querySelector(".titlebar"), btns = w.querySelectorAll(".lights i");
   w.addEventListener("mousedown", function(){ focusWin(w); });
   btns[0].onclick = function(){ closeWin(w, true); };
-  btns[1].onclick = function(){ closeWin(w, false); };
+  btns[1].onclick = function(){ minimizeWin(w); };
   btns[2].onclick = function(){ w.classList.toggle("max"); saveLayout(); };
   bar.addEventListener("pointerdown", function(e){
     if(e.target.tagName === "I" || w.classList.contains("max")) return;
@@ -757,41 +797,64 @@ drawList();
 
 /* ===== GAMES ===== */
 
-var G48=[],s48=0,b48=0,o48=false;
+var G48=[],T48=[],s48=0,b48=0,o48=false;
 try{ b48 = +localStorage.getItem("b48") || 0; }catch(e){}
 var C48={0:"#cdc1b4",2:"#eee4da",4:"#ede0c8",8:"#f2b179",16:"#f59563",32:"#f67c5f",64:"#f65e3b",128:"#edcf72",256:"#edcc61",512:"#edc850",1024:"#edc53f",2048:"#edc22e"};
-function add48(){
-  var e=[]; G48.forEach(function(r,y){ r.forEach(function(v,x){ if(!v) e.push([y,x]); }); });
-  if(!e.length) return;
-  var p=e[Math.floor(Math.random()*e.length)]; G48[p[0]][p[1]] = Math.random()<.9 ? 2 : 4;
+(function(){
+  var h=""; for(var i=0;i<16;i++) h+='<div class="c48" style="left:'+(i%4)*25+'%;top:'+((i/4)|0)*25+'%"><i></i></div>';
+  byId("b2048").innerHTML = h + '<div id="t48l"></div>';
+})();
+function paint48(t){
+  var e=t.el.firstChild; e.textContent=t.v; e.style.background=C48[t.v]||"#3c3a32";
+  e.style.color=t.v>4?"#fff":"#776e65"; e.style.fontSize=t.v>=1024?"17px":"";
 }
-function new48(){ G48=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]; s48=0; o48=false; add48(); add48(); byId("m48").textContent="Arrow keys or swipe to combine tiles"; draw48(); }
-function draw48(){
-  byId("b2048").innerHTML = G48.map(function(r){ return r.map(function(v){
-    return '<div class="t48" style="background:'+(C48[v]||"#3c3a32")+';color:'+(v>4?"#fff":"#776e65")+(v>=1024?";font-size:17px":"")+'">'+(v||"")+'</div>';
-  }).join(""); }).join("");
+function place48(t){ t.el.style.left=t.x*25+"%"; t.el.style.top=t.y*25+"%"; }
+function spawn48(y,x,v){
+  var el=document.createElement("div"); el.className="k48 new"; el.innerHTML='<div class="t48"></div>';
+  var t={v:v,x:x,y:y,el:el}; paint48(t); place48(t); byId("t48l").appendChild(el); G48[y][x]=t; T48.push(t);
+}
+function add48(){
+  var e=[]; for(var y=0;y<4;y++) for(var x=0;x<4;x++) if(!G48[y][x]) e.push([y,x]);
+  if(!e.length) return;
+  var p=e[Math.floor(Math.random()*e.length)]; spawn48(p[0],p[1],Math.random()<.9?2:4);
+}
+function upd48(){
   b48=Math.max(b48,s48); try{ localStorage.setItem("b48",b48); }catch(e){}
   byId("s48").textContent=s48; byId("bb48").textContent=b48;
 }
-function slide48(r){
-  var a=r.filter(Boolean);
-  for(var i=0;i<a.length-1;i++) if(a[i]===a[i+1]){ a[i]*=2; s48+=a[i]; a.splice(i+1,1); }
-  while(a.length<4) a.push(0); return a;
+function new48(){
+  byId("t48l").innerHTML=""; G48=[[],[],[],[]]; for(var y=0;y<4;y++) for(var x=0;x<4;x++) G48[y][x]=null;
+  T48=[]; s48=0; o48=false; add48(); add48(); upd48(); byId("m48").textContent="Arrow keys or swipe to combine tiles";
 }
 function pos48(d,k,j){ return d==0?[k,j] : d==2?[k,3-j] : d==1?[j,k] : [3-j,k]; }
 function move48(d){
-  if(o48) return; var moved=false;
+  if(o48) return; var moved=false, gone=[];
   for(var k=0;k<4;k++){
-    var line=[0,1,2,3].map(function(j){ var p=pos48(d,k,j); return G48[p[0]][p[1]]; }), n=slide48(line);
-    for(var j=0;j<4;j++){ var p=pos48(d,k,j); if(G48[p[0]][p[1]]!==n[j]){ moved=true; G48[p[0]][p[1]]=n[j]; } }
+    var arr=[]; for(var j=0;j<4;j++){ var p=pos48(d,k,j), t=G48[p[0]][p[1]]; if(t) arr.push(t); }
+    var pos=0, i=0;
+    while(i<arr.length){
+      var a=arr[i], b=(i+1<arr.length && arr[i+1].v===a.v) ? arr[i+1] : null, q=pos48(d,k,pos);
+      if(a.y!==q[0]||a.x!==q[1]) moved=true;
+      a.ny=q[0]; a.nx=q[1];
+      if(b){ moved=true; b.ny=q[0]; b.nx=q[1]; b.gone=true; gone.push(b); a.v*=2; a.mrg=true; s48+=a.v; i+=2; } else i++;
+      pos++;
+    }
   }
   if(!moved) return;
-  add48(); draw48();
+  G48=[[],[],[],[]]; for(var y=0;y<4;y++) for(var x=0;x<4;x++) G48[y][x]=null;
+  T48=T48.filter(function(t){ return !t.gone; });
+  T48.forEach(function(t){
+    t.y=t.ny; t.x=t.nx; G48[t.y][t.x]=t; place48(t);
+    if(t.mrg){ t.mrg=false; setTimeout(function(){ paint48(t); t.el.classList.remove("mrg"); void t.el.offsetWidth; t.el.classList.add("mrg"); },110); }
+  });
+  gone.forEach(function(t){ t.y=t.ny; t.x=t.nx; t.el.style.zIndex=1; place48(t); setTimeout(function(){ t.el.remove(); },130); });
+  add48(); upd48();
   var can=false, won=false;
-  G48.forEach(function(r,y){ r.forEach(function(v,x){
+  for(var y2=0;y2<4;y2++) for(var x2=0;x2<4;x2++){
+    var c=G48[y2][x2], v=c?c.v:0;
     if(v===2048) won=true;
-    if(!v || (x<3 && v===r[x+1]) || (y<3 && v===G48[y+1][x])) can=true;
-  }); });
+    if(!v || (x2<3 && G48[y2][x2+1] && G48[y2][x2+1].v===v) || (y2<3 && G48[y2+1][x2] && G48[y2+1][x2].v===v)) can=true;
+  }
   if(!can){ o48=true; byId("m48").textContent="Game over!"; }
   else byId("m48").textContent = won ? "You made 2048! Keep going." : "Arrow keys or swipe to combine tiles";
 }
