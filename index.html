@@ -144,6 +144,15 @@ dt{font-weight:bold;text-align:right}
 .cd.rd{color:#c00}.cd.sl{outline:3px solid #ffd54a}
 .cd.dn{background:repeating-linear-gradient(45deg,#2a4f9c,#2a4f9c 4px,#3b66bd 4px,#3b66bd 8px);border-color:#fff}
 .slot{position:absolute;width:48px;height:66px;border-radius:5px;border:2px dashed rgba(255,255,255,.35);cursor:pointer;color:rgba(255,255,255,.45);text-align:center;line-height:62px;font-size:22px}
+.ptools{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;padding:6px 8px;background:linear-gradient(#e8e8e8,#cfcfcf);border-bottom:1px solid #8a8a8a}
+.pb{padding:2px 8px;border:1px solid #888;border-radius:4px;background:linear-gradient(#fff,#ddd);font:inherit;font-size:11px;cursor:pointer;color:#222}
+.pb.on{background:linear-gradient(#9cc4f0,#4c88d1);color:#fff;border-color:#2a5b9c}
+#paPal{display:flex;flex-wrap:wrap;gap:2px;width:164px}
+.sw{width:18px;height:18px;border:1px solid #555;cursor:pointer}.sw.on{outline:2px solid #3d85d8;outline-offset:1px}
+.pcanvas{padding:8px;background:#7d7d7d;overflow:auto;max-height:calc(100vh - 230px)}
+#paint.max .body{display:flex;flex-direction:column;height:calc(100% - 22px);max-height:none}
+#paint.max .pcanvas{flex:1;min-height:0;max-height:none}
+#paCv{background:#fff;cursor:crosshair;touch-action:none;box-shadow:0 1px 4px rgba(0,0,0,.5);display:block;margin:0 auto}
 @media(max-width:700px){.win{left:8px!important;width:calc(100vw - 16px)}.di{width:40px;height:40px}#dock{gap:3px;padding:0 8px 6px;height:60px}.finder{flex-direction:column}.side{width:auto;display:flex;flex-wrap:wrap;border-right:0;border-bottom:1px solid #999}.side small{display:none}}
 </style>
 </head>
@@ -302,6 +311,24 @@ dt{font-weight:bold;text-align:right}
   </div>
 </div>
 
+<div class="win hidden" id="paint" data-app="Paint" style="left:200px;top:70px;width:520px">
+  <div class="titlebar"><div class="lights"><i></i><i></i><i></i></div><h2>Paint</h2></div>
+  <div class="body mp">
+    <div class="ptools">
+      <span id="paTools">
+        <button class="pb on" data-t="pen">Pen</button><button class="pb" data-t="eraser">Eraser</button><button class="pb" data-t="line">Line</button><button class="pb" data-t="rect">Rectangle</button><button class="pb" data-t="oval">Oval</button><button class="pb" data-t="fill">Fill</button><button class="pb" data-t="text">Text</button>
+      </span>
+      <span id="paPal"></span>
+      <input type="color" id="paCol" value="#000000" title="Custom colour">
+      <label class="muted">Size <input type="range" id="paSize" min="1" max="40" value="4" style="width:80px;vertical-align:middle"></label>
+      <button class="pb" id="paUndo">Undo</button><button class="pb" id="paClr">Clear</button><button class="pb" id="paSave">Save PNG</button><button class="pb" id="paOpen">Open Image&hellip;</button><input type="file" id="paFile" accept="image/*" hidden>
+      <select id="paFont" class="pb" title="Text font"><option value="Arial">Sans</option><option value="Georgia">Serif</option><option value="Courier New">Mono</option><option value="Impact">Impact</option></select>
+      <label class="muted">Canvas <input type="number" id="paW" value="480" min="50" max="2400" style="width:54px"> &times; <input type="number" id="paH" value="320" min="50" max="2400" style="width:54px"> <button class="pb" id="paRs">Resize</button></label>
+    </div>
+    <div class="pcanvas"><canvas id="paCv" width="480" height="320"></canvas></div>
+  </div>
+</div>
+
 <div id="dockwrap"><div id="dock">
   <div class="di" data-open="about"><span class="tip">About Me</span>
     <svg viewBox="0 0 64 64"><defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8cc0ff"/><stop offset="1" stop-color="#2757b0"/></linearGradient></defs><rect x="3" y="3" width="58" height="58" rx="13" fill="url(#g1)" stroke="#1a3a7a"/><circle cx="32" cy="25" r="10" fill="#fff"/><path d="M13 55c2-12 10-16 19-16s17 4 19 16z" fill="#fff"/></svg></div>
@@ -313,6 +340,8 @@ dt{font-weight:bold;text-align:right}
     <svg viewBox="0 0 64 64"><defs><radialGradient id="g6" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#d9ecff"/><stop offset="1" stop-color="#2f6fc9"/></radialGradient></defs><circle cx="32" cy="32" r="29" fill="url(#g6)" stroke="#1d4a8f"/><path d="M26 44V22l16-4v22" fill="none" stroke="#fff" stroke-width="3"/><ellipse cx="22" cy="44" rx="6" ry="4.5" fill="#fff"/><ellipse cx="38" cy="40" rx="6" ry="4.5" fill="#fff"/></svg></div>
   <div class="di" data-open="games"><span class="tip">Games</span>
     <svg viewBox="0 0 64 64"><defs><linearGradient id="g7" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9b6f2"/><stop offset="1" stop-color="#6a4bb8"/></linearGradient></defs><path d="M4 14h22l6 6h28v34a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="url(#g7)" stroke="#47308a"/><path d="M4 26h56v28a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#e6dcfa" stroke="#47308a"/><text x="32" y="53" font-size="24" text-anchor="middle" fill="#47308a">&#9822;</text></svg></div>
+  <div class="di" data-open="paint"><span class="tip">Paint</span>
+    <svg viewBox="0 0 64 64"><defs><linearGradient id="g8" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#d9d4c8"/></linearGradient></defs><rect x="3" y="3" width="58" height="58" rx="13" fill="url(#g8)" stroke="#8a8372"/><circle cx="20" cy="22" r="6" fill="#e3342f"/><circle cx="36" cy="16" r="6" fill="#f2c200"/><circle cx="48" cy="28" r="6" fill="#2fa84f"/><circle cx="16" cy="40" r="6" fill="#2f6fd0"/><path d="M26 54l22-22 6 6-22 22z" fill="#a8742f" stroke="#5c3d12"/><path d="M26 54l-4 6 8-2z" fill="#222"/></svg></div>
   <div class="sep"></div>
   <a class="di" href="https://github.com/CasualSideo" target="_blank" rel="noopener"><span class="tip">GitHub</span>
     <svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="13" fill="#2b2b2b" stroke="#000"/><circle cx="32" cy="32" r="16" fill="none" stroke="#fff" stroke-width="3"/><path d="M26 44v-8m12 8v-8m-12 0c0-5 12-5 12 0" fill="none" stroke="#fff" stroke-width="3"/></svg></a>
@@ -900,6 +929,107 @@ byId("solb").addEventListener("dblclick", function(e){
   for(var i=0;i<4;i++) if(canFnd(cs[0],i)){ takeS(k); fnd[i].push(cs[0]); sel=null; drawSol(); return; }
 });
 byId("nsol").onclick=newSol; newSol();
+
+/* ===== PAINT ===== */
+var cv=byId("paCv"), cx=cv.getContext("2d"), pTool="pen", pCol="#000000", pDown=false, pSnap=null, pSX=0, pSY=0, pLX=0, pLY=0, pUndo=[];
+cx.fillStyle="#fff"; cx.fillRect(0,0,cv.width,cv.height); cx.lineCap="round"; cx.lineJoin="round";
+byId("paPal").innerHTML = ["#000000","#7f7f7f","#c3c3c3","#ffffff","#880015","#ed1c24","#ff7f27","#ffc90e","#fff200","#22b14c","#00a2e8","#3f48cc","#a349a4","#b97a57","#ffaec9","#99d9ea"]
+  .map(function(c,i){ return '<span class="sw'+(i===0?" on":"")+'" data-c="'+c+'" style="background:'+c+'"></span>'; }).join("");
+function pPos(e){ var r=cv.getBoundingClientRect(); return [(e.clientX-r.left)*cv.width/r.width, (e.clientY-r.top)*cv.height/r.height]; }
+function pPush(){ pUndo.push(cx.getImageData(0,0,cv.width,cv.height)); if(pUndo.length>(cv.width*cv.height>1500000?6:25)) pUndo.shift(); }
+function pShape(x,y){
+  cx.putImageData(pSnap,0,0); cx.beginPath();
+  if(pTool==="line"){ cx.moveTo(pSX,pSY); cx.lineTo(x,y); }
+  else if(pTool==="rect") cx.rect(pSX,pSY,x-pSX,y-pSY);
+  else cx.ellipse((pSX+x)/2,(pSY+y)/2,Math.abs(x-pSX)/2,Math.abs(y-pSY)/2,0,0,Math.PI*2);
+  cx.stroke();
+}
+function pFill(x,y){
+  var w=cv.width, h=cv.height, img=cx.getImageData(0,0,w,h), d=img.data, seen=new Uint8Array(w*h);
+  x=Math.floor(x); y=Math.floor(y);
+  var i0=(y*w+x)*4, tr=d[i0], tg=d[i0+1], tb=d[i0+2], c=pCol.match(/\w\w/g).map(function(v){ return parseInt(v,16); });
+  var st=[[x,y]];
+  while(st.length){
+    var p=st.pop(), px=p[0], py=p[1];
+    if(px<0||py<0||px>=w||py>=h||seen[py*w+px]) continue;
+    seen[py*w+px]=1;
+    var i=(py*w+px)*4;
+    if(Math.abs(d[i]-tr)+Math.abs(d[i+1]-tg)+Math.abs(d[i+2]-tb) > 60) continue;
+    d[i]=c[0]; d[i+1]=c[1]; d[i+2]=c[2]; d[i+3]=255;
+    st.push([px+1,py],[px-1,py],[px,py+1],[px,py-1]);
+  }
+  cx.putImageData(img,0,0);
+}
+cv.addEventListener("pointerdown", function(e){
+  e.preventDefault();
+  if(pTool==="text"){ pText(pPos(e)); return; }
+  cv.setPointerCapture(e.pointerId);
+  var p=pPos(e), er=(pTool==="eraser"); pPush();
+  cx.lineWidth=(+byId("paSize").value)*(er?2:1); cx.strokeStyle=cx.fillStyle=er?"#ffffff":pCol;
+  pSX=pLX=p[0]; pSY=pLY=p[1];
+  if(pTool==="fill"){ pFill(p[0],p[1]); return; }
+  pDown=true;
+  if(pTool==="pen"||er){ cx.beginPath(); cx.arc(p[0],p[1],cx.lineWidth/2,0,Math.PI*2); cx.fill(); }
+  else pSnap=cx.getImageData(0,0,cv.width,cv.height);
+});
+cv.addEventListener("pointermove", function(e){
+  if(!pDown) return; var p=pPos(e);
+  if(pTool==="pen"||pTool==="eraser"){ cx.beginPath(); cx.moveTo(pLX,pLY); cx.lineTo(p[0],p[1]); cx.stroke(); pLX=p[0]; pLY=p[1]; }
+  else pShape(p[0],p[1]);
+});
+cv.addEventListener("pointerup", function(){ pDown=false; });
+cv.addEventListener("pointercancel", function(){ pDown=false; });
+byId("paTools").addEventListener("click", function(e){
+  var b=e.target.closest("[data-t]"); if(!b) return; pTool=b.dataset.t;
+  [].forEach.call(this.children, function(x){ x.classList.toggle("on", x===b); });
+});
+byId("paPal").addEventListener("click", function(e){
+  var s=e.target.closest(".sw"); if(!s) return; pCol=s.dataset.c; byId("paCol").value=pCol;
+  [].forEach.call(this.children, function(x){ x.classList.toggle("on", x===s); });
+});
+byId("paCol").oninput=function(){ pCol=this.value; [].forEach.call(byId("paPal").children, function(x){ x.classList.remove("on"); }); };
+function pUndoDo(){ if(pUndo.length) cx.putImageData(pUndo.pop(),0,0); }
+byId("paUndo").onclick=pUndoDo;
+byId("paClr").onclick=function(){ pPush(); cx.fillStyle="#fff"; cx.fillRect(0,0,cv.width,cv.height); };
+function pText(p){
+  var t=prompt("Type your text:"); if(!t) return;
+  pPush(); cx.fillStyle=pCol; cx.textBaseline="top";
+  cx.font=Math.max(12,(+byId("paSize").value)*4)+"px "+byId("paFont").value+", sans-serif";
+  cx.fillText(t,p[0],p[1]);
+}
+function resizeCanvas(w,h){
+  w=Math.max(50,Math.min(2400,Math.round(w)||cv.width)); h=Math.max(50,Math.min(2400,Math.round(h)||cv.height));
+  var t=document.createElement("canvas"); t.width=cv.width; t.height=cv.height; t.getContext("2d").drawImage(cv,0,0);
+  cv.width=w; cv.height=h; cx.fillStyle="#fff"; cx.fillRect(0,0,w,h); cx.lineCap="round"; cx.lineJoin="round";
+  cx.drawImage(t,0,0); pUndo=[]; byId("paW").value=w; byId("paH").value=h;
+}
+byId("paRs").onclick=function(){ resizeCanvas(+byId("paW").value,+byId("paH").value); };
+/* grow the canvas to fill the window when it is maximized (never shrinks, so nothing is lost) */
+new MutationObserver(function(){
+  if(!byId("paint").classList.contains("max")) return;
+  requestAnimationFrame(function(){
+    var a=document.querySelector("#paint .pcanvas"), nw=Math.max(cv.width,a.clientWidth-16), nh=Math.max(cv.height,a.clientHeight-16);
+    if(nw!==cv.width||nh!==cv.height) resizeCanvas(nw,nh);
+  });
+}).observe(byId("paint"),{attributes:true,attributeFilter:["class"]});
+byId("paOpen").onclick=function(){ byId("paFile").click(); };
+byId("paFile").onchange=function(){
+  var f=this.files[0]; this.value=""; if(!f) return;
+  var u=URL.createObjectURL(f), im=new Image();
+  im.onload=function(){
+    var k=Math.min(1,2400/Math.max(im.width,im.height)), w=Math.round(im.width*k), h=Math.round(im.height*k);
+    resizeCanvas(w,h); cx.fillStyle="#fff"; cx.fillRect(0,0,w,h); cx.drawImage(im,0,0,w,h); URL.revokeObjectURL(u);
+  };
+  im.onerror=function(){ URL.revokeObjectURL(u); alert("Can't open that image."); };
+  im.src=u;
+};
+byId("paSave").onclick=function(){
+  cv.toBlob(function(b){ var a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="painting.png"; a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); },1000); });
+};
+document.addEventListener("keydown", function(e){
+  var w=byId("paint");
+  if((e.metaKey||e.ctrlKey) && e.key==="z" && !w.classList.contains("hidden") && w.classList.contains("active")){ e.preventDefault(); pUndoDo(); }
+});
 
 /* ---- remember window layout (position, open/closed, maximized, stacking, project tab) ---- */
 var restoring = true, saveT;
