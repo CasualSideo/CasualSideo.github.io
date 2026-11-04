@@ -161,6 +161,9 @@ dt{font-weight:bold;text-align:right}
 #paint.max .body{display:flex;flex-direction:column;height:calc(100% - 22px);max-height:none}
 #paint.max .pcanvas{flex:1;min-height:0;max-height:none}
 #paCv{background:#fff;cursor:crosshair;touch-action:none;box-shadow:0 1px 4px rgba(0,0,0,.5);display:block;margin:0 auto}
+@keyframes shk{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.shake{animation:shk .3s}
+#cdMsg{min-height:20px;margin-top:6px}
 @media(max-width:700px){.win{left:8px!important;width:calc(100vw - 16px)}.di{width:40px;height:40px}#dock{gap:3px;padding:0 8px 6px;height:60px}.finder{flex-direction:column}.side{width:auto;display:flex;flex-wrap:wrap;border-right:0;border-bottom:1px solid #999}.side small{display:none}}
 </style>
 </head>
@@ -337,6 +340,17 @@ dt{font-weight:bold;text-align:right}
   </div>
 </div>
 
+<div class="win hidden" id="codes" data-app="Codes" style="left:260px;top:140px;width:320px">
+  <div class="titlebar"><div class="lights"><i></i><i></i><i></i></div><h2>Codes</h2></div>
+  <div class="body contact center">
+    <svg class="icon-lg" style="width:56px;height:56px" viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="13" fill="#2f3b52" stroke="#111"/><rect x="18" y="28" width="28" height="22" rx="4" fill="#fff"/><path d="M23 28v-6a9 9 0 0 1 18 0v6" fill="none" stroke="#fff" stroke-width="4"/><circle cx="32" cy="39" r="3" fill="#2f3b52"/></svg>
+    <p>Got a code? Type it in below.</p>
+    <input id="cdIn" type="text" placeholder="Enter code&hellip;" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <a class="btn blue" id="cdGo">Enter</a>
+    <div id="cdMsg" class="muted"></div>
+  </div>
+</div>
+
 <div id="dockwrap"><div id="dock">
   <div class="di" data-open="about"><span class="tip">About Me</span>
     <svg viewBox="0 0 64 64"><defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8cc0ff"/><stop offset="1" stop-color="#2757b0"/></linearGradient></defs><rect x="3" y="3" width="58" height="58" rx="13" fill="url(#g1)" stroke="#1a3a7a"/><circle cx="32" cy="25" r="10" fill="#fff"/><path d="M13 55c2-12 10-16 19-16s17 4 19 16z" fill="#fff"/></svg></div>
@@ -353,6 +367,8 @@ dt{font-weight:bold;text-align:right}
   <div class="sep"></div>
   <a class="di" href="https://github.com/CasualSideo" target="_blank" rel="noopener"><span class="tip">GitHub</span>
     <svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="13" fill="#2b2b2b" stroke="#000"/><circle cx="32" cy="32" r="16" fill="none" stroke="#fff" stroke-width="3"/><path d="M26 44v-8m12 8v-8m-12 0c0-5 12-5 12 0" fill="none" stroke="#fff" stroke-width="3"/></svg></a>
+  <div class="di" data-open="codes"><span class="tip">Codes</span>
+    <svg viewBox="0 0 64 64"><defs><linearGradient id="g9" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a6c8f"/><stop offset="1" stop-color="#232d42"/></linearGradient></defs><rect x="3" y="3" width="58" height="58" rx="13" fill="url(#g9)" stroke="#111"/><rect x="17" y="29" width="30" height="23" rx="4" fill="#fff"/><path d="M23 29v-7a9 9 0 0 1 18 0v7" fill="none" stroke="#fff" stroke-width="4"/><circle cx="32" cy="40" r="3.5" fill="#232d42"/><rect x="30.5" y="41" width="3" height="7" fill="#232d42"/></svg></div>
   <div class="di" data-open="site"><span class="tip">About This Site</span>
     <svg viewBox="0 0 64 64"><defs><linearGradient id="g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4e4e4"/><stop offset="1" stop-color="#8a8a8a"/></linearGradient></defs><rect x="3" y="3" width="58" height="58" rx="13" fill="url(#g5)" stroke="#555"/><circle cx="32" cy="32" r="13" fill="none" stroke="#333" stroke-width="5" stroke-dasharray="6 3.2"/><circle cx="32" cy="32" r="5" fill="#333"/></svg></div>
 </div></div>
@@ -1093,6 +1109,27 @@ document.addEventListener("keydown", function(e){
   var w=byId("paint");
   if((e.metaKey||e.ctrlKey) && e.key==="z" && !w.classList.contains("hidden") && w.classList.contains("active")){ e.preventDefault(); pUndoDo(); }
 });
+
+/* ===== CODES ===== */
+/* EDIT: add more codes here, one per line:  "code": "https://link", (codes are not case-sensitive) */
+var CODES = {
+  "kairandall": "https://jmcqueen.net/games/"
+};
+function tryCode(){
+  var inp = byId("cdIn"), msg = byId("cdMsg"), c = inp.value.trim().toLowerCase();
+  if(!c){ msg.textContent = ""; return; }
+  if(Object.prototype.hasOwnProperty.call(CODES, c)){
+    var u = CODES[c];
+    msg.innerHTML = 'Code accepted! Opening&hellip; <a href="' + u + '" target="_blank" rel="noopener">Click here if nothing opened</a>';
+    window.open(u, "_blank", "noopener");
+    inp.value = "";
+  } else {
+    msg.textContent = "Invalid code";
+    inp.classList.remove("shake"); void inp.offsetWidth; inp.classList.add("shake");
+  }
+}
+byId("cdGo").onclick = tryCode;
+byId("cdIn").addEventListener("keydown", function(e){ if(e.key === "Enter") tryCode(); });
 
 /* ---- remember window layout (position, open/closed, maximized, stacking, project tab) ---- */
 var restoring = true, saveT;
