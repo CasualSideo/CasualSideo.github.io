@@ -207,6 +207,7 @@ dt{font-weight:bold;text-align:right}
       <small>Projects</small>
     
       <div class="row sel" data-p="p1">MPK Studio</div>
+      <div class="row" data-p="p2">tetris.js</div>
     </div>
     <div class="pane">
       <div class="proj on" id="p1">
@@ -215,7 +216,13 @@ dt{font-weight:bold;text-align:right}
         <span class="tag">Fun</span><span class="tag">MIDI</span><br>
         <a class="btn" href="https://github.com/CasualSideo/MPKApp" target="_blank" rel="noopener">View on GitHub…</a>
         <a class="btn" href="https://jmcqueen.net/MPKApp" target="_blank" rel="noopener">Live Demo…</a>
-         </div>
+      </div>
+      <div class="proj" id="p2">
+        <h3>tetris.js</h3><div class="muted">2026 · Web Game</div>
+        <p>An addicting Tetris clone made in pure JavaScript.</p>
+        <span class="tag">JavaScript</span><span class="tag">Game</span><br>
+        <a class="btn" href="https://jmcqueen.net/tetris.js/" target="_blank" rel="noopener">Play Now…</a>
+      </div>
       </div>
   </div>
 </div>
@@ -388,7 +395,7 @@ function focusWin(w){
   byId("appname").textContent = w.dataset.app;
   saveLayout();
 }
-/* window animations: open grows out of the dock icon, yellow button squashes into it */
+
 function dockTarget(id){
   var d = document.querySelector('.di[data-open="' + id + '"]') || document.querySelector('.di[data-open="games"]');
   return d ? d.getBoundingClientRect() : null;
@@ -504,7 +511,7 @@ function tick(){
 }
 tick(); setInterval(tick, 20000);
 
-/* ===== CHESS ===== */
+
 if (typeof Chess !== "undefined") {
   var game = new Chess(), sel = null;
   var SYM = {p:"\u265f\uFE0E", n:"\u265e", b:"\u265d", r:"\u265c", q:"\u265b", k:"\u265a"};
@@ -888,7 +895,7 @@ byId("b2048").addEventListener("touchend", function(e){
 });
 byId("n48").onclick=new48; new48();
 
-/* --- Minesweeper (9x9, 10 mines) --- */
+
 var MW=9,MH=9,MN=10,MS=[],mOver=0,mStart=0,mTimer,mT=0,mHit=-1,MCOL=["","#00f","#080","#f00","#008","#800","#088","#000","#555"];
 function nbrs(i){
   var x=i%MW,y=(i/MW)|0,o=[];
@@ -940,7 +947,7 @@ byId("mboard").addEventListener("contextmenu", function(e){
 });
 byId("mface").onclick=newMine; byId("nmine").onclick=newMine; newMine();
 
-/* --- Solitaire (Klondike, draw 1) --- */
+
 var SS=["\u2660","\u2665","\u2666","\u2663"].map(function(c){ return c+"\uFE0E"; }), RK=["","A","2","3","4","5","6","7","8","9","10","J","Q","K"];
 var stk=[],wst=[],fnd=[[],[],[],[]],tbl=[],sel=null;
 function isRed(c){ return c.s===1||c.s===2; }
@@ -1110,8 +1117,7 @@ document.addEventListener("keydown", function(e){
   if((e.metaKey||e.ctrlKey) && e.key==="z" && !w.classList.contains("hidden") && w.classList.contains("active")){ e.preventDefault(); pUndoDo(); }
 });
 
-/* ===== CODES ===== */
-/* EDIT: add more codes here, one per line, with a comma after every line except the last (codes are not case-sensitive) */
+
 var CODES = {
   "kairandall": "https://jmcqueen.net/games/",
   "fnaf": "https://jmcqueen.net/games/fnaf/index.html",
